@@ -11,3 +11,5 @@ wheels/
 
 # Documents
 documents
+
+.DS_Store
