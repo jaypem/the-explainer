@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434" # Ollama API
+    volumes:
+      - ollama_models:/root/.ollama # persist pulled models
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  analyzer:
+    build: .
+    container_name: pdf-analyzer
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      # If later we switch to HTTP API instead of `ollama run`, we could set OLLAMA_HOST=ollama
+      - OLLAMA_HOST=ollama
+    working_dir: /app
+    volumes:
+      - ./documents:/app/documents:ro # mount your PDFs (create 'documents' folder locally)
+      - ./outputs:/app/outputs # store analyses
+    stdin_open: true # allow interactive input
+    tty: true # pseudo-TTY for nice prompts
+    command: ["python", "analyze_pdf_with_ollama.py"]
+
+volumes:
+  ollama_models:

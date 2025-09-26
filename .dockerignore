@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual envs
+venv/
+.env
+.venv/
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+
+# Output / temporary
+outputs/
+*.analyzed.md.txt
+
+# Not needed in image
+README.md
